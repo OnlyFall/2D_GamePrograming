@@ -27,7 +27,23 @@ def move_first_to_second():
 
 
 def move_second_to_third():
-    pass
+    startX, startY = 132, 243
+    endX, endY = 535, 470
+    frame = 0
+    moveRangeX = (endX - startX) / 10
+    moveRangeY = (endY - startY) / 10
+
+    while startX < endX:
+        clear_canvas_now()
+        frame = (frame + 1) % 8
+        if moveRangeX > 0:
+            character.clip_draw(frame * 100, 100, 100, 100, startX, startY)
+        elif moveRangeX < 0:
+            character.clip_draw(frame * 100, 0, 100, 100, startX, startY)
+        update_canvas()
+        startX += moveRangeX
+        startY += moveRangeY
+        delay(0.01)
 
 def move_third_to_fourth():
     pass
