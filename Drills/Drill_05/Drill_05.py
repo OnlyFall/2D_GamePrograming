@@ -7,7 +7,13 @@ character = load_image('character.png')
 
 
 def move_from_center_to_right():
-    pass
+    x, y = 800 // 2, 90
+    while x < 800 - 25:
+        clear_canvas_now()
+        grass.draw_now(400,30)
+        character.draw_now(x,y);
+        x += 2
+
 
 def move_up():
     pass
