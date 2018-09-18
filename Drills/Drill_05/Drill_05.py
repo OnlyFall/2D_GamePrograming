@@ -7,7 +7,7 @@ character = load_image('character.png')
 
 
 def move_from_center_to_right():
-    x, y = 800 // 2, 90
+    x, y = 800 // 2, 50 + 40
     while x < 800 - 25:
         clear_canvas_now()
         grass.draw_now(400,30)
@@ -40,14 +40,20 @@ def move_down():
         y -= 2
 
 def move_left_to_center():
+    x, y = 0 + 25, 50 + 40
+    while x < 800 // 2:
+        clear_canvas_now()
+        grass.draw_now(400,30)
+        character.draw_now(x,y);
+        x += 2
     pass
 
 def make_rectangle():
-   # move_from_center_to_right()
-  #  move_up()
- #   move_left()
-    move_down()
-    move_left_to_center()
+     move_from_center_to_right()
+     move_up()
+     move_left()
+     move_down()
+     move_left_to_center()
 
 def make_circle():
     pass
