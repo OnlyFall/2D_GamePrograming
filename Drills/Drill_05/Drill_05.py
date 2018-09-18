@@ -142,7 +142,23 @@ def move_seventh_to_eighth():
         delay(0.01)
 
 def move_eighth_to_nine():
-    pass
+    startX, startY = 692, 518
+    endX, endY = 682, 336
+    frame = 0
+    moveRangeX = (endX - startX) / 10
+    moveRangeY = (endY - startY) / 10
+
+    while startX > endX:
+        clear_canvas_now()
+        frame = (frame + 1) % 8
+        if moveRangeX > 0:
+            character.clip_draw(frame * 100, 100, 100, 100, startX, startY)
+        elif moveRangeX < 0:
+            character.clip_draw(frame * 100, 0, 100, 100, startX, startY)
+        update_canvas()
+        startX += moveRangeX
+        startY += moveRangeY
+        delay(0.01)
 
 def move_nine_to_tenth():
     pass
@@ -158,7 +174,7 @@ while True:
    # move_fourth_to_fifth()
    # move_fifth_to_sixth()
    # move_sixth_to_seventh()
-    move_seventh_to_eighth()
+   # move_seventh_to_eighth()
     move_eighth_to_nine()
     move_nine_to_tenth()
     move_tenth_to_first()
