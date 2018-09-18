@@ -3,10 +3,28 @@ from pico2d import *
 open_canvas()
 
 grass = load_image('grass.png')
-character = load_image('character.png')
+character = load_image('animation_sheet.png')
+
 
 def move_first_to_second():
-    pass
+    startX, startY = 203, 535
+    endX , endY = 132, 243
+    frame = 0
+    moveRangeX = (endX - startX) / 10
+    moveRangeY = (endY - startY) / 10
+
+    while startX > endX:
+        clear_canvas_now()
+        frame = (frame + 1) % 8
+        if moveRangeX > 0:
+            character.clip_draw(frame * 100, 100, 100, 100, startX, startY)
+        elif moveRangeX < 0:
+            character.clip_draw(frame * 100, 0, 100, 100, startX, startY)
+        update_canvas()
+        startX += moveRangeX
+        startY += moveRangeY
+        delay(0.01)
+
 
 def move_second_to_third():
     pass
