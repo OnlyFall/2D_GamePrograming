@@ -85,7 +85,23 @@ def move_fourth_to_fifth():
 
 
 def move_fifth_to_sixth():
-    pass
+    startX, startY = 715, 136
+    endX, endY = 316, 225
+    frame = 0
+    moveRangeX = (endX - startX) / 10
+    moveRangeY = (endY - startY) / 10
+
+    while startX > endX:
+        clear_canvas_now()
+        frame = (frame + 1) % 8
+        if moveRangeX > 0:
+            character.clip_draw(frame * 100, 100, 100, 100, startX, startY)
+        elif moveRangeX < 0:
+            character.clip_draw(frame * 100, 0, 100, 100, startX, startY)
+        update_canvas()
+        startX += moveRangeX
+        startY += moveRangeY
+        delay(0.01)
 
 def move_sixth_to_seventh():
     pass
