@@ -9,11 +9,38 @@ def handle_events():
         if event.type == SDL_MOUSEBUTTONDOWN
             endX = event.x - 25
             endY = KPU_HEIGHT - 1 - event.y + 26
-            moveCheck = False
-            
+            moveCheck = True
 
+        elif event.type == SDL_MOUSEMOTION:
+            mouseX = event.x
+            mouseY = event.y
+
+
+def characterDraw():
+    pass
 
 def moveingCharacter():
+    global ch_x, ch_y
+
+    moveX = (endX - ch_x) / 100
+    moveY = (endY - ch_y) / 100
+
+    count = 0
+
+    while count < 100:
+        ch_x += moveX
+        ch_y += moveY
+        characterDraw()
+        handle_events()
+        if moveCheck == True:
+            count = 0
+            moveX = (endX - ch_x) / 100
+            moveY = (endY - ch_y) / 100
+        hand.draw(mouseX, mouseY)
+
+
+
+
 
 
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
@@ -23,8 +50,9 @@ stop = load_image('character.png')
 hand = load_image('hand_arrow.png')
 
 running = True
-x = 800 // 2
+mouseX, mouseY = KPU_WIDTH / 2, KPU_HEIGHT / 2
 frame = 0
+ch_x, ch_y = KPU_WIDTH / 2, KPU_HEIGHT / 2
 endX, endY = 0
 
 
