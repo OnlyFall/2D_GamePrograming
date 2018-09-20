@@ -1,4 +1,5 @@
 from pico2d import *
+
 KPU_WIDTH, KPU_HEIGHT = 1280, 1024
 
 def handle_events():
@@ -27,7 +28,6 @@ def characterDraw(moveX):
     clear_canvas()
     kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
     frame = (frame + 1) % 8
-
     if moveX > 0:
         character.clip_draw(frame * 100, 100 * 1, 100, 100, ch_x, ch_y)
     elif moveX < 0:
@@ -54,11 +54,13 @@ def moveingCharacter():
         count += 1
         characterDraw(moveX)
         handle_events()
+
         if moveCheck == True:
             count = 0
             moveX = (endX - ch_x) / 100
             moveY = (endY - ch_y) / 100
             moveCheck = False
+
         update_canvas()
         running = False
 
@@ -99,7 +101,6 @@ while True:
         moveingCharacter()
     elif running == False:
         stopCharacter()
-
 
 close_canvas()
 
