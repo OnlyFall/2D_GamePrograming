@@ -3,10 +3,11 @@ KPU_WIDTH, KPU_HEIGHT = 1280, 1024
 
 def handle_events():
     global moveCheck
+    global endX, endY
     events = get_events()
 
     for event in events:
-        if event.type == SDL_MOUSEBUTTONDOWN
+        if event.type == SDL_MOUSEBUTTONDOWN:
             endX = event.x - 25
             endY = KPU_HEIGHT - 1 - event.y + 26
             moveCheck = True
@@ -21,6 +22,8 @@ def characterDraw():
 
 def moveingCharacter():
     global ch_x, ch_y
+    global endX, endY
+    global moveCheck
 
     moveX = (endX - ch_x) / 100
     moveY = (endY - ch_y) / 100
@@ -53,8 +56,8 @@ running = True
 mouseX, mouseY = KPU_WIDTH / 2, KPU_HEIGHT / 2
 frame = 0
 ch_x, ch_y = KPU_WIDTH / 2, KPU_HEIGHT / 2
-endX, endY = 0
-
+endX, endY = 0, 0
+moveCheck = False
 
 while running:
     moveingCharacter()
