@@ -22,13 +22,14 @@ def characterDraw():
     global moveX, moveY
     global mouseX, mouseY
     global ch_x, ch_y
-
+    global frame
     clear_canvas()
     kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
-    if moveX > 0:
+    frame = (frame + 1) % 8
+    if moveX >= 0:
         character.clip_draw(frame * 100, 100 * 1, 100, 100, ch_x, ch_y)
     elif moveX < 0:
-        character.clip_draw(frame * 100, 0 * 1, 100, 100, ch_x, ch_y)
+        character.clip_draw(frame * 100, 0 , 100, 100, ch_x, ch_y)
     handle_events()
     hand.draw(mouseX, mouseY)
 
@@ -38,7 +39,6 @@ def moveingCharacter():
     global ch_x, ch_y
     global endX, endY
     global moveCheck
-
     moveX = (endX - ch_x) / 100
     moveY = (endY - ch_y) / 100
 
@@ -48,6 +48,7 @@ def moveingCharacter():
         clear_canvas()
         ch_x += moveX
         ch_y += moveY
+        count += 1
         characterDraw()
         handle_events()
         if moveCheck == True:
@@ -55,6 +56,7 @@ def moveingCharacter():
             moveX = (endX - ch_x) / 100
             moveY = (endY - ch_y) / 100
             moveCheck = False
+
 
         update_canvas()
 
@@ -74,8 +76,8 @@ running = True
 mouseX, mouseY = KPU_WIDTH / 2, KPU_HEIGHT / 2
 frame = 0
 ch_x, ch_y = KPU_WIDTH / 2, KPU_HEIGHT / 2
-moveX, moveY = 0, 0
-endX, endY = 0, 0
+moveX, moveY = KPU_WIDTH / 2, KPU_HEIGHT / 2
+endX, endY = KPU_WIDTH / 2, KPU_HEIGHT / 2
 moveCheck = False
 
 while running:
