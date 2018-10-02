@@ -10,6 +10,8 @@ open_canvas(WIDTH, HEIGHT)
 character = load_image('animation_sheet.png')
 tempX = 0
 
+
+
 def characterDraw(x, y):
     global frame
     global tempX
@@ -45,5 +47,3 @@ n = 1
 while True:
     draw_line(points[n - 1], points[n])
     n = (n + 1) % 20
-
-
