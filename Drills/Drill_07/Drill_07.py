@@ -54,8 +54,15 @@ def draw_line_basic(p1, p2):
     pass
 
 
-def draw_line(p1, p2):
+def characterDraw(p):
     pass
+
+def draw_line(p1, p2):
+    for i in range(0, 100 + 1, 10):
+        t = i / 100
+        x = (1 - t) * p1[0] + t * p2[0]
+        y = (1 - t) * p1[1] + t * p2[1]
+        characterDraw((x, y))
 
 
 prepare_turtle_canvas()
