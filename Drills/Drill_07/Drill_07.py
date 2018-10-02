@@ -60,25 +60,29 @@ kpu_ground = load_image('KPU_GROUND.png')
 character = load_image('animation_sheet.png')
 tempX, tempY = 0, 0
 
-def characterDraw(p):
+def characterDraw(x, y):
     clear_canvas()
-    if(tempX < p[0]):
-        character.clip_draw(frame * 100, 100 * 1, 100, 100, p[0], p[1])
-    elif(tempX > p[0])
-        character.clip_draw(frame * 100, 0 * 1, 100, 100, p[0], p[1])
+    if(tempX < x):
+        character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+    elif(tempX > x):
+        character.clip_draw(frame * 100, 0 * 1, 100, 100, x, y)
     update_canvas()
 
 
 def draw_line(p1, p2):
-    for i in range(0, 100 + 1, 10):
+    for i in range(0, 100 + 1, 1):
         t = i / 100
         x = (1 - t) * p1[0] + t * p2[0]
         y = (1 - t) * p1[1] + t * p2[1]
-        characterDraw((x, y))
+        characterDraw(x, y)
 
 
-prepare_turtle_canvas()
-
+#prepare_turtle_canvas()
+size = 20
+points = [(random.randint(0, 1200), random.randint(0, 1000)) for i in range(size)]
+n = 1
 while True:
+    draw_line(points[n - 1], points[n])
+
 
 turtle.done()
