@@ -58,18 +58,26 @@ frame = 0
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
 kpu_ground = load_image('KPU_GROUND.png')
 character = load_image('animation_sheet.png')
-tempX, tempY = 0, 0
+tempX = 0
 
 def characterDraw(x, y):
+    global frame
     clear_canvas()
+    frame = (frame + 1) % 8
     if(tempX < x):
         character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
     elif(tempX > x):
         character.clip_draw(frame * 100, 0 * 1, 100, 100, x, y)
     update_canvas()
+    delay(0.01)
 
 
 def draw_line(p1, p2):
+    global tempX
+
+    if tempX == 0:
+        tempX = p1[0]
+
     for i in range(0, 100 + 1, 1):
         t = i / 100
         x = (1 - t) * p1[0] + t * p2[0]
