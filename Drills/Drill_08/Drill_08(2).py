@@ -2,6 +2,13 @@ from pico2d import *
 import turtle
 import random
 
+tempX = 0
+frame = 0
+KPU_WIDTH, KPU_HEIGHT = 1280, 1024
+open_canvas(KPU_WIDTH, KPU_HEIGHT)
+kpu_ground = load_image('KPU_GROUND.png')
+character = load_image('animation_sheet.png')
+
 def draw_curve_3_points(p1, p2, p3):
 
 
@@ -54,17 +61,15 @@ def characterDraw(p):
 def characterStamp():
     pass
 
-tempX = 0
-frame = 0
-KPU_WIDTH, KPU_HEIGHT = 1280, 1024
-open_canvas(KPU_WIDTH, KPU_HEIGHT)
-kpu_ground = load_image('KPU_GROUND.png')
-character = load_image('animation_sheet.png')
 
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
-points = [(-350, 200), (400, 350), (300, -300), (-200, -200)]
+size = 10
+n = 0
+points = [(random.randint(100, 1100), random.randint(100, 1000)) for i in range(size)]
 while True:
-    draw_curve_4_points(points[0], points[1], points[2],points[3])
+    draw_curve_4_points(points[(n - 4)], points[(n - 3)], points[(n - 2)], points[(n - 1)])
+    n = (n + 3) % 10
+
 
 
 
