@@ -1,42 +1,12 @@
+from pico2d import *
 import turtle
 import random
-from pico2d import *
+
 
 def stop():
     turtle.bye()
 
-
-def prepare_turtle_canvas():
-    turtle.setup(1024, 768)
-    turtle.bgcolor(0.2, 0.2, 0.2)
-    turtle.penup()
-    turtle.hideturtle()
-    turtle.shape('arrow')
-    turtle.shapesize(2)
-    turtle.pensize(5)
-    turtle.color(1, 0, 0)
-    turtle.speed(100)
-    turtle.goto(-500, 0)
-    turtle.pendown()
-    turtle.goto(480, 0)
-    turtle.stamp()
-    turtle.penup()
-    turtle.goto(0, -360)
-    turtle.pendown()
-    turtle.goto(0, 360)
-    turtle.setheading(90)
-    turtle.stamp()
-    turtle.penup()
-    turtle.home()
-
-    turtle.shape('circle')
-    turtle.pensize(1)
-    turtle.color(0, 0, 0)
-    turtle.speed(50)
-
-    turtle.onkey(stop, 'Escape')
-    turtle.listen()
-
+open_canvas()
 
 
 def draw_big_point(p):
@@ -101,7 +71,6 @@ def draw_curve_4_points(p1, p2, p3, p4):
 
 
 
-prepare_turtle_canvas()
 points = [(-350, -100), (-50, 200), (150, -100), (350, 300)]
 while True:
     draw_curve_4_points((-350, -100), (-50, 200), (150, -100), (350, 300))
