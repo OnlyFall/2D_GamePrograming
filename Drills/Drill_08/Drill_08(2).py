@@ -1,6 +1,6 @@
 from pico2d import *
 import random
-
+hu = 0
 tempX = 0
 frame = 0
 KPU_WIDTH, KPU_HEIGHT = 1280, 1024
