@@ -25,8 +25,8 @@ class Boy:
 
 class Small:
     def __init__(self):
-        self.moveY = random.randint(1, 10)
-        self.x, self.y = random.randint(100, 700), 500
+        self.moveY = random.randint(4, 10)
+        self.x, self.y = random.randint(100, 700), 599
         self.image = load_image('ball21x21.png')
 
     def draw(self):
@@ -40,8 +40,8 @@ class Small:
 
 class Big:
     def __init__(self):
-        self.moveY = random.randint(1, 10)
-        self.x, self.y = random.randint(100, 700), 500
+        self.moveY = random.randint(4, 10)
+        self.x, self.y = random.randint(100, 700), 599
         self.image = load_image('ball41x41.png')
 
     def draw(self):
