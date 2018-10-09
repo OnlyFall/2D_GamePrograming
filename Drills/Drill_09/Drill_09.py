@@ -48,6 +48,9 @@ smallBall = Small()
 bigBall = Big()
 smallBallCount = random.randint(1, 20)
 
+bBall = [Small() for i in range(smallBallCount)]
+sBall = [Big() for i in range(20 - smallBallCount)]
+
 boy = Boy()
 team = [Boy() for i in range(11)]
 grass = Grass()
