@@ -23,6 +23,15 @@ class Boy:
     def draw(self):
         self.image.clip_draw(self.frame * 100, 0, 100 ,100, self.x, self.y)
 
+class Small:
+    pass
+
+class Big:
+    pass
+
+
+
+
 def handle_events():
     global running
     events = get_events()
@@ -34,6 +43,10 @@ def handle_events():
 
 # initialization code
 open_canvas()
+
+smallBall = Small()
+bigBall = Big()
+smallBallCount = random.randint(1, 20)
 
 boy = Boy()
 team = [Boy() for i in range(11)]
