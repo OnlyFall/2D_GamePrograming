@@ -24,10 +24,34 @@ class Boy:
         self.image.clip_draw(self.frame * 100, 0, 100 ,100, self.x, self.y)
 
 class Small:
-    pass
+    def __init__(self):
+        self.moveY = random.randint(1, 10)
+        self.x, self.y = random.randint(100, 700), 500
+        self.image = load_image('ball21x21.png')
+
+    def draw(self):
+        self.image.draw(self.x, self.y)
+
+    def moveBall(self):
+        if self.y - 11 > 30:
+            self.y = self.y - self.moveY
+        else:
+            self.y = 40
 
 class Big:
-    pass
+    def __init__(self):
+        self.moveY = random.randint(1, 10)
+        self.x, self.y = random.randint(100, 700), 500
+        self.image = load_image('ball41x41.png')
+
+    def draw(self):
+        self.image.draw(self.x, self.y)
+
+    def moveBall(self):
+        if self.y - 22 > 30:
+            self.y = self.y - self.moveY
+        else:
+            self.y = 40
 
 
 
@@ -63,8 +87,20 @@ while running:
     for boy in team:
         boy.update()
 
+    for smallBall in sBall:
+        smallBall.moveBall()
+
+    for bigBall in bBall:
+        bigBall.moveBall()
+
     clear_canvas()
     grass.draw()
+
+    for smallBall in sBall:
+        smallBall.draw()
+
+    for bigBall in bBall:
+        bigBall.draw()
 
     for boy in team:
         boy.draw()
