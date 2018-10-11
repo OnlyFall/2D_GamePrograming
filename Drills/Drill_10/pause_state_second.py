@@ -53,7 +53,7 @@ def draw():
 def update():
     global frame
     frame = (frame + 1) % 2
-    delay(0.5)
+    delay(0.4)
 
 def pause():
     pass
