@@ -7,7 +7,7 @@ from pico2d import *
 import game_framework
 import title_state
 import pause_state
-
+import pause_state_second
 
 
 name = "MainState"
@@ -75,7 +75,8 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_state(title_state)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
-            game_framework.push_state(pause_state)
+            game_framework.push_state(pause_state_second)
+           # game_framework.push_state(pause_state)
 
 
 def update():
