@@ -35,11 +35,12 @@ def handle_events():
 frame = 0
 def draw():
     global frame
-    
+
     clear_canvas()
 
     main_state.draw()
-    image.draw(400, 300)
+    if frame == 0:
+        image.draw(400, 300)
 
     update_canvas()
 
