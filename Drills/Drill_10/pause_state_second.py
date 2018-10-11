@@ -34,6 +34,8 @@ def handle_events():
 
 frame = 0
 def draw():
+    global frame
+    
     clear_canvas()
 
     main_state.draw()
