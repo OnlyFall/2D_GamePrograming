@@ -4,31 +4,36 @@ from pico2d import *
 
 
 name = "TitleState"
-image = None
-
+BG = None
+START = None
+END = None
+startSelect = 0
 
 def enter():
-    global image
-    image = load_image("BG\\stage.png")
+    global BG, START, END
+    BG = load_image("UI\\startBG.png")
+    START = load_image('UI\\start.png')
 
 def exit():
-    global image
-    del(image)
+    global BG, START, END
+    del(BG)
+    del(START)
+    del(END)
 
 
-mouseX, mouseY = 0,0
 def handle_events():
-    global mouseX, mouseY
-
+    global startSelect
     events = get_events()
     for event in events:
-
-        if event.type == SDL_QUIT:
-            game_framework.quit()
-
         if(event.type == SDL_MOUSEMOTION):
             mouseX = event.x
-            mouseY = event.y
+            mouseY = 800 - event.y - 1
+            if mouseX > (1200 / 2) - (129 / 2) and  mouseX < (1200 / 2) + (129 / 2) and mouseY < 300 + (25 / 2) and mouseY > 300 - (25 / 2):
+                startSelect = 1
+            else:
+                startSelect = 0
+        elif(event.type == SDL_MOUSEBUTTONDOWN):
+            game_framework.change_state(main_state)
 
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
@@ -38,8 +43,11 @@ def handle_events():
 
 
 def draw():
+    global startSelect
+    handle_events()
     clear_canvas()
-    image.draw(400, 300)
+    BG.draw(600, 400)
+    START.clip_draw(startSelect * 129, 0, 129, 25, 600, 300)
     update_canvas()
 
 
