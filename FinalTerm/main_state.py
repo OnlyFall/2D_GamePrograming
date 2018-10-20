@@ -15,6 +15,25 @@ name = "MainState"
 boy = None
 grass = None
 font = None
+banana = None
+
+count = 0
+frame = 0
+
+class Banana:
+    def __init__(self):
+        self.image = load_image('character\\temp\\sprite.png')
+        self.x = 800
+        self.y = 90
+
+    def update(self):
+        global count, frame
+        count = (count + 1) % 30
+        if count == 0:
+            frame = (frame + 1) % 4
+
+    def draw(self):
+        self.image.clip_draw(0, frame * 150, 150, 150, self.x, self.y)
 
 
 
@@ -47,15 +66,17 @@ class Boy:
 
 
 def enter():
-    global boy, grass
+    global boy, grass, banana
     boy = Boy()
     grass = Grass()
+    banana = Banana()
 
 
 def exit():
-    global boy, grass
+    global boy, grass, banana
     del(boy)
     del(grass)
+    del(banana)
 
 
 def pause():
@@ -81,12 +102,13 @@ def handle_events():
 
 def update():
     boy.update()
+    banana.update()
 
 
 def draw():
     clear_canvas()
     grass.draw()
-    boy.draw()
+    banana.draw()
     update_canvas()
 
 

@@ -4,25 +4,31 @@ from pico2d import *
 
 
 name = "TitleState"
-BG = None
+BackgroundImage = None
 START = None
 END = None
 startSelect = 0
+endSelect = 1
 
 def enter():
-    global BG, START, END
-    BG = load_image("UI\\startBG.png")
-    START = load_image('UI\\start.png')
+    global BackgroundImage
+    global START
+    global END
+    BackgroundImage = load_image("D:\\Git\\2D_GamePrograming\\FinalTerm\\UI\\BG.png")
+    START = load_image('D:\\Git\\2D_GamePrograming\\FinalTerm\\UI\\start.png')
+    END = load_image('UI\\ENDSPRITE.png')
 
 def exit():
-    global BG, START, END
-    del(BG)
+    global BackgroundImage
+    global START
+    global END
+    del(BackgroundImage)
     del(START)
     del(END)
 
 
 def handle_events():
-    global startSelect
+    global startSelect, endSelect
     events = get_events()
     for event in events:
         if(event.type == SDL_MOUSEMOTION):
@@ -32,8 +38,17 @@ def handle_events():
                 startSelect = 1
             else:
                 startSelect = 0
+
+            if(mouseX > (1200 / 2) - (69 / 2) and mouseX < (1200 / 2) + (69 / 2) and mouseY < 250 + (20 / 2) and mouseY > 250 - (20 / 2)):
+                endSelect = 0
+            else:
+                endSelect = 1
+
         elif(event.type == SDL_MOUSEBUTTONDOWN):
-            game_framework.change_state(main_state)
+            if startSelect == 1:
+                game_framework.change_state(main_state)
+            elif endSelect == 0:
+                game_framework.quit()
 
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
@@ -44,10 +59,11 @@ def handle_events():
 
 def draw():
     global startSelect
-    handle_events()
+    global endSelect
     clear_canvas()
-    BG.draw(600, 400)
+    BackgroundImage.draw(600, 400)
     START.clip_draw(startSelect * 129, 0, 129, 25, 600, 300)
+    END.clip_draw(0, endSelect * 20, 69, 20, 600, 250)
     update_canvas()
 
 

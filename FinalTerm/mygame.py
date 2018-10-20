@@ -1,7 +1,7 @@
 import game_framework
 import pico2d
 
-import  start_state
+import start_state
 # fill here
 
 pico2d.open_canvas(1200, 800)
