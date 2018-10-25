@@ -125,14 +125,17 @@ class DashState:
         pass
 
     @staticmethod
-    def do(boy, event):
+    def do(boy):
         boy.frame = (boy.frame + 1) % 8
         boy.x += boy.velocity * 5
         boy.x = clamp(25, boy.x, 1600 - 25)
 
     @staticmethod
-    def draw(boy, event):
-        pass
+    def draw(boy):
+        if boy.velocity == 1:
+            boy.image.clip_draw(boy.frame * 100, 100, 100, 100, boy.x, boy.y)
+        else:
+            boy.image.clip_draw(boy.frame * 100, 0, 100, 100, boy.x, boy.y)
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SLEEP_TIMER: SleepState, SPACE: IdleState},
