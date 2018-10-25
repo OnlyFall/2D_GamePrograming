@@ -111,7 +111,14 @@ class SleepState:
 class DashState:
     @staticmethod
     def enter(boy, event):
-       pass
+        if event == RIGHT_DOWN:
+            boy.velocity += 1
+        elif event == LEFT_DOWN:
+            boy.velocity -= 1
+        elif event == RIGHT_UP:
+            boy.velocity -= 1
+        elif event == LEFT_UP:
+            boy.velocity += 1
 
     @staticmethod
     def exit(boy, event):
