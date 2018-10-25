@@ -121,12 +121,14 @@ class DashState:
             boy.velocity += 1
 
     @staticmethod
-    def exit(boy, event):
+    def exit(boy):
         pass
 
     @staticmethod
     def do(boy, event):
-        pass
+        boy.frame = (boy.frame + 1) % 8
+        boy.x += boy.velocity * 5
+        boy.x = clamp(25, boy.x, 1600 - 25)
 
     @staticmethod
     def draw(boy, event):
