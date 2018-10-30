@@ -1,6 +1,7 @@
 import game_framework
 from pico2d import *
 from ball import Ball
+import math
 
 import game_world
 
@@ -129,6 +130,7 @@ class SleepState:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+       # boy.GhostX = cos(180 / 3.14)
 
     @staticmethod
     def draw(boy):
@@ -183,6 +185,7 @@ class Boy:
 
     def __init__(self):
         self.x, self.y = 1600 // 2, 90
+        self.GhostX, self.GhostY = 0, 0
         # Boy is only once created, so instance image loading is fine
         self.image = load_image('animation_sheet.png')
         self.font = load_font('ENCR10B.TTF', 16)
