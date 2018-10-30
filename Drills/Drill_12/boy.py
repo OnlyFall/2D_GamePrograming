@@ -40,7 +40,7 @@ class IdleState:
 
     @staticmethod
     def enter(boy, event):
-        boy.timer = get_time() - 0.8
+        boy.timer = get_time() - 0.9
         if event == RIGHT_DOWN:
             boy.velocity += RUN_SPEED_PPS
         elif event == LEFT_DOWN:
@@ -130,8 +130,8 @@ class SleepState:
     def do(boy):
         global multi
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        boy.GhostX = math.cos((3.141592 / 180) * boy.rad) * 300 + (1600 // 2)
-        boy.GhostY = math.sin((3.141592 / 180) * boy.rad) * 300 + 90 + 300
+        boy.GhostX = math.cos((3.141592 / 180) * boy.rad) * 100 + (1600 // 2)
+        boy.GhostY = math.sin((3.141592 / 180) * boy.rad) * 100 + 90 + 100
         if(boy.standup >= 3.141592 / 2):
             boy.rad = (boy.rad + 720 * (game_framework.frame_time)) % 360
         else:
@@ -157,12 +157,40 @@ class SleepState:
             boy.image.clip_composite_draw(int(1) * 100, 200, 100, 100, -3.141592 / 2 + boy.standup, '', boy.GhostX + 25 - (boy.standup * multi), boy.GhostY - 25 - (boy.standup * multi), 100, 100)
 
 
+class GhostState:
+
+    @staticmethod
+    def enter(boy, event):
+        boy.frame = 0
+
+    @staticmethod
+    def exit(boy, event):
+        pass
+
+    @staticmethod
+    def do(boy):
+        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+
+    @staticmethod
+    def draw(boy):
+        if boy.dir == 1:
+            boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
+            boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
+            boy.image.opacity(0.5)
+        else:
+            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
+            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
+            boy.image.opacity(0.5)
+
+
+
 
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SLEEP_TIMER: SleepState, SPACE: IdleState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: RunState},
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState, SPACE: IdleState},
+    GhostState: {LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState, SPACE: IdleState}
 }
 
 class Boy:
@@ -208,16 +236,32 @@ class Boy:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
-
 class Ghost:
 
     def __init__(self):
-        self.x, self.y = 0, 0
+        self.x, self.y = 1600 // 2, 90
         self.opacifyValue = 1
         self.GhostX, self.GhostY = 0, 0
         self.rad = 0
         self.standup = 0
+        # Boy is only once created, so instance image loading is fine
         self.image = load_image('animation_sheet.png')
+        self.font = load_font('ENCR10B.TTF', 16)
+        self.dir = 1
+        self.velocity = 0
+        self.frame = 0
+        self.event_que = []
+        self.cur_state = IdleState
+        self.cur_state.enter(self, None)
+
+
+    def fire_ball(self):
+        ball = Ball(self.x, self.y, self.dir*3)
+        game_world.add_object(ball, 1)
+
+
+    def add_event(self, event):
+        self.event_que.insert(0, event)
 
     def update(self):
         self.cur_state.do(self)
@@ -227,6 +271,10 @@ class Ghost:
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
 
-   def draw(self):
+    def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 50, '(Time : %3.2f)' % get_time(), (255,255,0))
+    def handle_event(self, event):
+        if (event.type, event.key) in key_event_table:
+            key_event = key_event_table[(event.type, event.key)]
+            self.add_event(key_event)

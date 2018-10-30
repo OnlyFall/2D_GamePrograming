@@ -13,9 +13,11 @@ from grass import Grass
 name = "MainState"
 
 boy = None
+Die = None
 
 def enter():
     global boy
+    global Die
     boy = Boy()
     grass = Grass()
     game_world.add_object(grass, 0)
