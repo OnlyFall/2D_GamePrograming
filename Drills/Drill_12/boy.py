@@ -13,12 +13,6 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-# fill expressions correctly
-PIXEL_PER_METER = 0
-RUN_SPEED_KMPH = 0
-RUN_SPEED_MPM = 0
-RUN_SPEED_MPS = 0
-RUN_SPEED_PPS = 0
 
 # Boy Action Speed
 # fill expressions correctly
@@ -94,7 +88,6 @@ class RunState:
 
         elif event == LEFT_UP:
             boy.velocity += RUN_SPEED_PPS
-
         boy.dir = clamp(-1, boy.velocity, 1)
 
     @staticmethod
@@ -164,40 +157,12 @@ class SleepState:
             boy.image.clip_composite_draw(int(1) * 100, 200, 100, 100, -3.141592 / 2 + boy.standup, '', boy.GhostX + 25 - (boy.standup * multi), boy.GhostY - 25 - (boy.standup * multi), 100, 100)
 
 
-class GhostState:
-
-    @staticmethod
-    def enter(boy, event):
-        boy.frame = 0
-
-    @staticmethod
-    def exit(boy, event):
-        pass
-
-    @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-
-    @staticmethod
-    def draw(boy):
-        if boy.dir == 1:
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
-            boy.image.opacity(0.5)
-        else:
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
-            boy.image.opacity(0.5)
-
-
-
 
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SLEEP_TIMER: SleepState, SPACE: IdleState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: RunState},
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState, SPACE: IdleState},
-    GhostState: {LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState, SPACE: IdleState}
 }
 
 class Boy:
@@ -243,3 +208,25 @@ class Boy:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
+
+class Ghost:
+
+    def __init__(self):
+        self.x, self.y = 0, 0
+        self.opacifyValue = 1
+        self.GhostX, self.GhostY = 0, 0
+        self.rad = 0
+        self.standup = 0
+        self.image = load_image('animation_sheet.png')
+
+    def update(self):
+        self.cur_state.do(self)
+        if len(self.event_que) > 0:
+            event = self.event_que.pop()
+            self.cur_state.exit(self, event)
+            self.cur_state = next_state_table[self.cur_state][event]
+            self.cur_state.enter(self, event)
+
+   def draw(self):
+        self.cur_state.draw(self)
+        self.font.draw(self.x - 60, self.y + 50, '(Time : %3.2f)' % get_time(), (255,255,0))
