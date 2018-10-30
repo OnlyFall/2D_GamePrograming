@@ -122,6 +122,7 @@ class SleepState:
     @staticmethod
     def enter(boy, event):
         boy.frame = 0
+        boy.rad = 270
 
     @staticmethod
     def exit(boy, event):
@@ -130,19 +131,23 @@ class SleepState:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-       # boy.GhostX = cos(180 / 3.14)
+        boy.GhostX = math.cos((3.141592 / 180) * boy.rad) * 150 + (1600 // 2)
+        boy.GhostY = math.sin((3.141592 / 180) * boy.rad) * 150 + 90 + 150
+        boy.rad = (boy.rad + 1) % 360
 
     @staticmethod
     def draw(boy):
         if boy.dir == 1:
+            boy.image.opacify(1)
             boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
             boy.image.opacify(0.5)
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
+            boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.GhostX - 25, boy.GhostY - 25, 100, 100)
 
         else:
+            boy.image.opacify(1)
             boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
             boy.image.opacify(0.5)
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
+            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.GhostX + 25, boy.GhostY - 25, 100, 100)
 
 
 class GhostState:
@@ -186,6 +191,7 @@ class Boy:
     def __init__(self):
         self.x, self.y = 1600 // 2, 90
         self.GhostX, self.GhostY = 0, 0
+        self.rad = 0
         # Boy is only once created, so instance image loading is fine
         self.image = load_image('animation_sheet.png')
         self.font = load_font('ENCR10B.TTF', 16)
