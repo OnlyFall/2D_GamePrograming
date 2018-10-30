@@ -46,7 +46,7 @@ class IdleState:
 
     @staticmethod
     def enter(boy, event):
-        boy.timer = get_time()
+        boy.timer = get_time() - 0.8
         if event == RIGHT_DOWN:
             boy.velocity += RUN_SPEED_PPS
         elif event == LEFT_DOWN:
@@ -118,12 +118,16 @@ class RunState:
             boy.image.clip_draw(int(boy.frame) * 100, 0, 100, 100, boy.x, boy.y)
 
 
+multi = 1
 class SleepState:
 
     @staticmethod
     def enter(boy, event):
+        global multi
+        multi = 1
         boy.frame = 0
         boy.rad = 270
+        boy.standup = 0
 
     @staticmethod
     def exit(boy, event):
@@ -131,26 +135,33 @@ class SleepState:
 
     @staticmethod
     def do(boy):
+        global multi
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        boy.GhostX = math.cos((3.141592 / 180) * boy.rad) * 150 + (1600 // 2)
-        boy.GhostY = math.sin((3.141592 / 180) * boy.rad) * 150 + 90 + 150
-        boy.rad = (boy.rad + 1) % 360
+        boy.GhostX = math.cos((3.141592 / 180) * boy.rad) * 300 + (1600 // 2)
+        boy.GhostY = math.sin((3.141592 / 180) * boy.rad) * 300 + 90 + 300
+        if(boy.standup >= 3.141592 / 2):
+            boy.rad = (boy.rad + 720 * (game_framework.frame_time)) % 360
+        else:
+            boy.standup += (3.141592 / 2) / 100
+            multi += 1
+
         if int(boy.frame) == 0:
             boy.opacifyValue = random.randint(20, 80) / 100
 
     @staticmethod
     def draw(boy):
+        global multi
         if boy.dir == 1:
             boy.image.opacify(1)
             boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
             boy.image.opacify(boy.opacifyValue)
-            boy.image.clip_composite_draw(int(1) * 100, 300, 100, 100, 3.141592 / 2, '', boy.GhostX - 25, boy.GhostY - 25, 100, 100)
+            boy.image.clip_composite_draw(int(1) * 100, 300, 100, 100, 3.141592 / 2 - boy.standup, '', boy.GhostX - 25 + (boy.standup * multi), boy.GhostY - 25 + (boy.standup * multi), 100, 100)
 
         else:
             boy.image.opacify(1)
             boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
             boy.image.opacify(boy.opacifyValue)
-            boy.image.clip_composite_draw(int(1) * 100, 200, 100, 100, -3.141592 / 2, '', boy.GhostX + 25, boy.GhostY - 25, 100, 100)
+            boy.image.clip_composite_draw(int(1) * 100, 200, 100, 100, -3.141592 / 2 + boy.standup, '', boy.GhostX + 25 - (boy.standup * multi), boy.GhostY - 25 - (boy.standup * multi), 100, 100)
 
 
 class GhostState:
@@ -196,6 +207,7 @@ class Boy:
         self.opacifyValue = 1
         self.GhostX, self.GhostY = 0, 0
         self.rad = 0
+        self.standup = 0
         # Boy is only once created, so instance image loading is fine
         self.image = load_image('animation_sheet.png')
         self.font = load_font('ENCR10B.TTF', 16)
