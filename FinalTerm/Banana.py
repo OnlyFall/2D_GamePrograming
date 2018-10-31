@@ -22,7 +22,7 @@ FRAMES_PER_ACTION = 6
 
 
 # Boy Event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE, DIE = range(7)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE, DIE, DOWN = range(8)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -108,10 +108,11 @@ class RunState:
             banana.image.clip_draw(int(banana.frame) * 150, 0, 150, 150, banana.x, banana.y)
 
 
-class JumpState:
+class JumpUpState:
 
     @staticmethod
     def enter(banana, event):
+        banana.jumpRange = 0
         if event == RIGHT_DOWN:
             banana.velocity += RUN_SPEED_PPS
 
@@ -135,11 +136,17 @@ class JumpState:
         banana.frame = (banana.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
         banana.x += banana.velocity * game_framework.frame_time
         if banana.dir == 1:
-            banana.y += banana.velocity * game_framework.frame_time
+            banana.jumpRange += 150 * game_framework.frame_time
+            banana.y += 150 * game_framework.frame_time
         else:
-            banana.y += banana.velocity * game_framework.frame_time * -1
+            banana.jumpRange += 150 *game_framework.frame_time
+            banana.y += 150 * game_framework.frame_time
 
         banana.x = clamp(25, banana.x, 1600 - 25)
+
+        if banana.jumpRange >= 150:
+            banana.add_event(DOWN)
+
 
     @staticmethod
     def draw(banana):
@@ -152,15 +159,16 @@ class JumpState:
 
 
 next_state_table = {
-    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,SPACE: IdleState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: JumpState},
-    JumpState:{RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState, RIGHT_UP: JumpState, LEFT_UP: JumpState}
+    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE: JumpUpState},
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: JumpUpState},
+    JumpUpState:{RIGHT_DOWN: JumpUpState, LEFT_DOWN: JumpUpState, RIGHT_UP: JumpUpState, LEFT_UP: JumpUpState, SPACE: JumpUpState, DOWN:RunState}
 }
 
 class Banana:
 
     def __init__(self):
         self.x, self.y = 1600 // 2, 90
+        self.jumpRange = 0
         self.opacifyValue = 1
         self.GhostX, self.GhostY = 0, 0
         self.rad = 0
