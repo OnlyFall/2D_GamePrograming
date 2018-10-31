@@ -108,7 +108,35 @@ class RunState:
             banana.image.clip_draw(int(banana.frame) * 150, 0, 150, 150, banana.x, banana.y)
 
 
+class JumpState:
 
+    @staticmethod
+    def enter(banana, event):
+        if event == RIGHT_DOWN:
+            banana.velocity += RUN_SPEED_PPS
+
+        elif event == LEFT_DOWN:
+            banana.velocity -= RUN_SPEED_PPS
+
+        elif event == RIGHT_UP:
+            banana.velocity -= RUN_SPEED_PPS
+
+        elif event == LEFT_UP:
+            banana.velocity += RUN_SPEED_PPS
+
+        banana.dir = clamp(-1, banana.velocity, 1)
+
+    @staticmethod
+    def exit(banana, event):
+        pass
+
+    @staticmethod
+    def do(banana):
+        pass
+
+    @staticmethod
+    def draw(banana):
+        pass
 
 
 next_state_table = {
