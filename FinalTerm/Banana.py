@@ -1,15 +1,35 @@
+import game_framework
 from pico2d import *
+import math
+import random
 
 import game_world
 
+# Boy Run Speed
+PIXEL_PER_METER = (10.0 / 0.3)
+RUN_SPEED_KMPH = 20.0
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+
+# Boy Action Speed
+# fill expressions correctly
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 6
+
+
+
 # Boy Event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SHIFT_DOWN, SHIFT_UP, SLEEP_TIMER, DASH_TIMER = range(8)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE, DIE = range(7)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
+    (SDL_KEYDOWN, SDLK_SPACE): SPACE
 }
 
 
@@ -18,155 +38,100 @@ key_event_table = {
 class IdleState:
 
     @staticmethod
-    def enter(boy, event):
+    def enter(banana, event):
+        banana.timer = get_time() - 0.9
         if event == RIGHT_DOWN:
-            boy.velocity += 1
+            banana.velocity += RUN_SPEED_PPS
         elif event == LEFT_DOWN:
-            boy.velocity -= 1
+            banana.velocity -= RUN_SPEED_PPS
         elif event == RIGHT_UP:
-            boy.velocity -= 1
+            banana.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
-            boy.velocity += 1
-        boy.timer = 1000
+            banana.velocity += RUN_SPEED_PPS
+
 
     @staticmethod
-    def exit(boy, event):
-        # fill here
-        pass
+    def exit(banana, event):
+        if event == SPACE:
+            pass
 
     @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        boy.timer -= 1
-        if boy.timer == 0:
-            boy.add_event(SLEEP_TIMER)
+    def do(banana):
+        banana.frame = (banana.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
 
     @staticmethod
-    def draw(boy):
-        if boy.dir == 1:
-            boy.image.clip_draw(boy.frame * 100, 300, 100, 100, boy.x, boy.y)
+    def draw(banana):
+        if banana.dir == 1:
+            banana.image.opacify(1)
+            banana.image.clip_draw(int(banana.frame) * 150, 150, 150, 150, banana.x, banana.y)
         else:
-            boy.image.clip_draw(boy.frame * 100, 200, 100, 100, boy.x, boy.y)
+            banana.image.opacify(1)
+            banana.image.clip_draw(int(banana.frame) * 150, 0, 150, 150, banana.x, banana.y)
 
 
 class RunState:
 
     @staticmethod
-    def enter(boy, event):
+    def enter(banana, event):
         if event == RIGHT_DOWN:
-            boy.velocity += 1
+            banana.velocity += RUN_SPEED_PPS
+
         elif event == LEFT_DOWN:
-            boy.velocity -= 1
+            banana.velocity -= RUN_SPEED_PPS
+
         elif event == RIGHT_UP:
-            boy.velocity -= 1
+            banana.velocity -= RUN_SPEED_PPS
+
         elif event == LEFT_UP:
-            boy.velocity += 1
-        boy.dir = boy.velocity
+            banana.velocity += RUN_SPEED_PPS
+
+        banana.dir = clamp(-1, banana.velocity, 1)
 
     @staticmethod
-    def exit(boy, event):
-        # fill here
-        pass
+    def exit(banana, event):
+        if event == SPACE:
+            pass
 
     @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        boy.timer -= 1
-        boy.x += boy.velocity
-        boy.x = clamp(25, boy.x, 1600 - 25)
+    def do(banana):
+        banana.frame = (banana.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
+        banana.x += banana.velocity * game_framework.frame_time
+        banana.x = clamp(25, banana.x, 1600 - 25)
 
     @staticmethod
-    def draw(boy):
-        if boy.velocity == 1:
-            boy.image.clip_draw(boy.frame * 100, 100, 100, 100, boy.x, boy.y)
+    def draw(banana):
+        if banana.dir == 1:
+            banana.image.opacify(1)
+            banana.image.clip_draw(int(banana.frame) * 150, 150, 150, 150, banana.x, banana.y)
         else:
-            boy.image.clip_draw(boy.frame * 100, 0, 100, 100, boy.x, boy.y)
-
-
-class SleepState:
-    @staticmethod
-    def enter(boy, event):
-        boy.frame = 0
-
-    @staticmethod
-    def exit(boy, event):
-        pass
-
-    @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-
-    @staticmethod
-    def draw(boy):
-        if boy.dir == 1:
-            boy.image.clip_composite_draw(boy.frame * 100, 300, 100, 100, 3.141592 / 2, ' ', boy.x + 25, boy.y - 25, 100, 100)
-
-        else:
-            boy.image.clip_composite_draw(boy.frame * 100, 200, 100, 100, -3.141592 / 2, ' ', boy.x + 25, boy.y - 25, 100, 100)
-
-class DashState:
-    @staticmethod
-    def enter(boy, event):
-        if event == RIGHT_DOWN:
-            boy.velocity += 1
-        elif event == LEFT_DOWN:
-            boy.velocity -= 1
-        elif event == RIGHT_UP:
-            boy.velocity -= 1
-        elif event == LEFT_UP:
-            boy.velocity += 1
-        boy.dir = boy.velocity
-        boy.timer = 500
-
-    @staticmethod
-    def exit(boy, event):
-        pass
-
-    @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        boy.timer -= 5
-        boy.x += boy.velocity * 5
-        boy.x = clamp(25, boy.x, 1600 - 25)
-
-        if boy.timer == 0:
-            boy.add_event(SHIFT_UP)
-
-    @staticmethod
-    def draw(boy):
-        if boy.velocity == 1:
-            boy.image.clip_draw(boy.frame * 100, 100, 100, 100, boy.x, boy.y)
-        else:
-            boy.image.clip_draw(boy.frame * 100, 0, 100, 100, boy.x, boy.y)
+            banana.image.opacify(1)
+            banana.image.clip_draw(int(banana.frame) * 150, 0, 150, 150, banana.x, banana.y)
 
 
 
 
 
 next_state_table = {
-    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState},
-    SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState},
-    DashState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState}
+    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,SPACE: IdleState},
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: RunState}
 }
 
+class Banana:
 
-class Boy:
     def __init__(self):
         self.x, self.y = 1600 // 2, 90
-        self.image = load_image('animation_sheet.png')
+        self.opacifyValue = 1
+        self.GhostX, self.GhostY = 0, 0
+        self.rad = 0
+        self.standup = 0
+        # Boy is only once created, so instance image loading is fine
+        self.image = load_image('character\\Banana\\totalBanana.png')
         self.dir = 1
         self.velocity = 0
         self.frame = 0
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
-
-
-    def fire_ball(self):
-        # fill here
-        pass
-
 
 
     def add_event(self, event):
@@ -183,9 +148,7 @@ class Boy:
     def draw(self):
         self.cur_state.draw(self)
 
-
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-
