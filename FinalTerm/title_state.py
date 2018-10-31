@@ -14,8 +14,8 @@ def enter():
     global BackgroundImage
     global START
     global END
-    BackgroundImage = load_image("D:\\Git\\2D_GamePrograming\\FinalTerm\\UI\\BG.png")
-    START = load_image('D:\\Git\\2D_GamePrograming\\FinalTerm\\UI\\start.png')
+    BackgroundImage = load_image("UI\\BG.png")
+    START = load_image('UI\\start.png')
     END = load_image('UI\\ENDpng.png')
 
 def exit():
