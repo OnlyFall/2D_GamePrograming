@@ -132,16 +132,29 @@ class JumpState:
 
     @staticmethod
     def do(banana):
-        pass
+        banana.frame = (banana.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
+        banana.x += banana.velocity * game_framework.frame_time
+        if banana.dir == 1:
+            banana.y += banana.velocity * game_framework.frame_time
+        else:
+            banana.y += banana.velocity * game_framework.frame_time * -1
+
+        banana.x = clamp(25, banana.x, 1600 - 25)
 
     @staticmethod
     def draw(banana):
-        pass
+        if banana.dir == 1:
+            banana.image.opacify(1)
+            banana.image.clip_draw(int(banana.frame) * 150, 150, 150, 150, banana.x, banana.y)
+        else:
+            banana.image.opacify(1)
+            banana.image.clip_draw(int(banana.frame) * 150, 0, 150, 150, banana.x, banana.y)
 
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,SPACE: IdleState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: RunState}
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: JumpState},
+    JumpState:{RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState, RIGHT_UP: JumpState, LEFT_UP: JumpState}
 }
 
 class Banana:
