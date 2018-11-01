@@ -22,7 +22,7 @@ FRAMES_PER_ACTION = 6
 
 
 # Boy Event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE, DIE, DOWN = range(8)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE, DIE, DOWN, END = range(9)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -53,7 +53,7 @@ class IdleState:
     @staticmethod
     def exit(banana, event):
         if event == SPACE:
-            pass
+            banana.jumpRange = 0
 
     @staticmethod
     def do(banana):
@@ -90,7 +90,7 @@ class RunState:
     @staticmethod
     def exit(banana, event):
         if event == SPACE:
-            pass
+            banana.jumpRange = 0
 
     @staticmethod
     def do(banana):
@@ -112,7 +112,6 @@ class JumpUpState:
 
     @staticmethod
     def enter(banana, event):
-        banana.jumpRange = 0
         if event == RIGHT_DOWN:
             banana.velocity += RUN_SPEED_PPS
 
@@ -162,7 +161,6 @@ class JumpDownState:
 
     @staticmethod
     def enter(banana, event):
-        banana.jumpRange = 0
         if event == RIGHT_DOWN:
             banana.velocity += RUN_SPEED_PPS
 
@@ -193,11 +191,7 @@ class JumpDownState:
         banana.x = clamp(25, banana.x, 1600 - 25)
 
         if banana.y <= 90:
-            pass
-    
-
-        if banana.jumpRange >= 150:
-            banana.add_event(DOWN)
+            banana.add_event(END)
 
 
     @staticmethod
@@ -212,7 +206,8 @@ class JumpDownState:
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE: JumpUpState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: JumpUpState},
-    JumpUpState:{RIGHT_DOWN: JumpUpState, LEFT_DOWN: JumpUpState, RIGHT_UP: JumpUpState, LEFT_UP: JumpUpState, SPACE: JumpUpState, DOWN:RunState}
+    JumpUpState:{RIGHT_DOWN: JumpUpState, LEFT_DOWN: JumpUpState, RIGHT_UP: JumpUpState, LEFT_UP: JumpUpState, SPACE: JumpUpState, DOWN:JumpDownState},
+    JumpDownState: {END: RunState,RIGHT_DOWN: JumpDownState, LEFT_DOWN: JumpDownState, RIGHT_UP: JumpDownState, LEFT_UP: JumpDownState, SPACE: JumpDownState}
 }
 
 class Banana:
