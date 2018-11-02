@@ -1,5 +1,6 @@
 import game_framework
 from pico2d import *
+import PIL
 import math
 import random
 
@@ -135,15 +136,15 @@ class JumpUpState:
         banana.frame = (banana.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
         banana.x += banana.velocity * game_framework.frame_time
         if banana.dir == 1:
-            banana.jumpRange += 150 * game_framework.frame_time
-            banana.y += 150 * game_framework.frame_time
+            banana.jumpRange += 200 * game_framework.frame_time
+            banana.y += 200 * game_framework.frame_time
         else:
-            banana.jumpRange += 150 *game_framework.frame_time
-            banana.y += 150 * game_framework.frame_time
+            banana.jumpRange += 200 *game_framework.frame_time
+            banana.y += 200 * game_framework.frame_time
 
         banana.x = clamp(25, banana.x, 1600 - 25)
 
-        if banana.jumpRange >= 150:
+        if banana.jumpRange >= 200:
             banana.add_event(DOWN)
 
 
@@ -184,14 +185,18 @@ class JumpDownState:
         banana.frame = (banana.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
         banana.x += banana.velocity * game_framework.frame_time
         if banana.dir == 1:
-            banana.y -= 150 * game_framework.frame_time
+            banana.y -= 200 * game_framework.frame_time
         else:
-            banana.y -= 150 * game_framework.frame_time
+            banana.y -= 200 * game_framework.frame_time
 
         banana.x = clamp(25, banana.x, 1600 - 25)
 
         if banana.y <= 90:
             banana.add_event(END)
+
+        else:
+            pass
+
 
 
     @staticmethod
@@ -207,7 +212,7 @@ next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE: JumpUpState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: JumpUpState},
     JumpUpState:{RIGHT_DOWN: JumpUpState, LEFT_DOWN: JumpUpState, RIGHT_UP: JumpUpState, LEFT_UP: JumpUpState, SPACE: JumpUpState, DOWN:JumpDownState},
-    JumpDownState: {END: RunState,RIGHT_DOWN: JumpDownState, LEFT_DOWN: JumpDownState, RIGHT_UP: JumpDownState, LEFT_UP: JumpDownState, SPACE: JumpDownState}
+    JumpDownState: {END: RunState, RIGHT_DOWN: JumpDownState, LEFT_DOWN: JumpDownState, RIGHT_UP: JumpDownState, LEFT_UP: JumpDownState, SPACE: JumpDownState}
 }
 
 class Banana:
