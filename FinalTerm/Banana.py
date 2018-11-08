@@ -211,7 +211,7 @@ class JumpDownState:
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE: JumpUpState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: JumpUpState},
-    JumpUpState:{RIGHT_DOWN: JumpUpState, LEFT_DOWN: JumpUpState, RIGHT_UP: JumpUpState, LEFT_UP: JumpUpState, SPACE: JumpUpState, DOWN:JumpDownState},
+    JumpUpState: {RIGHT_DOWN: JumpUpState, LEFT_DOWN: JumpUpState, RIGHT_UP: JumpUpState, LEFT_UP: JumpUpState, SPACE: JumpUpState, DOWN: JumpDownState},
     JumpDownState: {END: RunState, RIGHT_DOWN: JumpDownState, LEFT_DOWN: JumpDownState, RIGHT_UP: JumpDownState, LEFT_UP: JumpDownState, SPACE: JumpDownState}
 }
 
