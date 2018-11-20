@@ -70,7 +70,8 @@ class WalkingState:
         boy.x += boy.x_velocity * game_framework.frame_time
         boy.y += boy.y_velocity * game_framework.frame_time
 
-        boy.x = clamp(5 + (boy.y / boy.bg.h) * 200, boy.x, boy.bg.w - 5 - (boy.y / boy.bg.h) * 200)
+        #왼쪽, 오른쪽 라인을 일차함수로 계산!
+        boy.x = clamp(5 + (boy.y / boy.bg.h) * 190, boy.x, boy.bg.w - 5 - (boy.y / boy.bg.h) * 190)
         boy.y = clamp(40, boy.y, boy.bg.h - 40)
 
     @staticmethod
@@ -142,8 +143,9 @@ class Boy:
             self.cur_state.enter(self, event)
 
     def draw(self):
+        cx, cy = self.x - self.bg.window_left, self.y - self.bg.window_bottom
         self.cur_state.draw(self)
-        self.font.draw(self.canvas_width//2 - 60, self.canvas_height//2 + 50, '(%5d, %5d)' % (self.x, self.y), (255, 255, 0))
+        self.font.draw(cx - 70, cy + 50, '(%5d, %5d)' % (self.x, self.y), (255, 255, 0))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
