@@ -3,6 +3,7 @@ import json
 import os
 
 from pico2d import *
+from background import  FixedBackground as Background
 import game_framework
 import game_world
 
@@ -14,6 +15,7 @@ name = "MainState"
 
 boy = None
 grass = None
+background = None
 balls = []
 
 
@@ -37,12 +39,15 @@ def enter():
     boy = Boy()
     game_world.add_object(boy, 1)
 
-    global grass
-    grass = Grass()
-    game_world.add_object(grass, 0)
+    global background
+    background = Background()
+    game_world.add_object(background, 0)
+
+    background.set_center_object(boy)
+    boy.set_background(background)
 
     global balls
-    balls = [Ball() for i in range(10)]
+    balls = [Ball() for i in range(100)]
     game_world.add_objects(balls, 1)
 
 
@@ -76,7 +81,7 @@ def update():
     for ball in balls:
         if collide(boy, ball):
             balls.remove(ball)
-            # fill here
+            boy.eat(ball)
             game_world.remove_object(ball)
 
 def draw():
