@@ -3,7 +3,8 @@ import json
 import os
 
 from pico2d import *
-from background import  InfiniteBackground as Background
+from background import InfiniteBackground as Background
+#from background import FixedBackground as Background
 import game_framework
 import game_world
 

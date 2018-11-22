@@ -19,7 +19,7 @@ class Ball:
     def draw(self):
 
         self.image.draw(self.x - main_state.boy.x + 640, self.y - main_state.boy.y + 300)
-        self.font.draw(self.x - main_state.boy.x, self.y - main_state.boy.y, '(%5d, %5d)' % (self.x - main_state.boy.x + 640, self.y - main_state.boy.y + 300), (255, 255, 0))
+        #self.font.draw(self.x - main_state.boy.x, self.y - main_state.boy.y, '(%5d, %5d)' % (self.x - main_state.boy.x + 640, self.y - main_state.boy.y + 300), (255, 255, 0))
         #draw_rectangle(*self.get_bb())
 
     def update(self):
