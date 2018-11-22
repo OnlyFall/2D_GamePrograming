@@ -136,7 +136,7 @@ class Boy:
 
 
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return 400 - 50, 300 - 50, 400 + 50, 300 + 50
 
 
     def set_background(self, bg):
@@ -157,7 +157,7 @@ class Boy:
 
     def draw(self):
         self.cur_state.draw(self)
-        self.font.draw(self.canvas_width // 2 - 60, self.canvas_height // 2 + 50, '(%5d, %5d)' % (self.x, self.y), (255, 255, 0))
+        #self.font.draw(self.canvas_width // 2 - 60, self.canvas_height // 2 + 50, '(%5d, %5d)' % (self.x, self.y), (255, 255, 0))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:

@@ -10,29 +10,16 @@ class Ball:
     def __init__(self):
         if Ball.image == None:
             Ball.image = load_image('ball21x21.png')
-        self.x, self.y, self.fall_speed = random.randint(0, 1600-1), random.randint(0, 600), 0
+        self.x, self.y, self.fall_speed = random.randint(0, 1800-1), random.randint(0, 1000), 0
+        self.font = load_font('ENCR10B.TTF', 16)
 
     def get_bb(self):
-        return self.x - 10, self.y  - 10, self.x + 10, self.y + 10
-
-    def set_background(self, boy):
-        self.center_object = boy
-        self.cx, self.cy = self.x, self.y
-        if boy.x_velocity > 0:
-            self.cx = self.x + boy.x
-            #self.cy = self.y - boy.y_velocity * game_framework.frame_time
-        else:
-            self.cx = self.x - boy.x
-            #self.cy = self.y - boy.y_velocity * game_framework.frame_time
-
-        if boy.y_velocity > 0:
-            self.cy = self.y + boy.y
-        else:
-            self.cy = self.y - boy.y
+        return self.x - main_state.boy.x - 10 + 640, self.y - main_state.boy.y - 10 + 300, self.x - main_state.boy.x + 10 + 640, self.y  - main_state.boy.y + 10 + 300
 
     def draw(self):
 
-        self.image.draw(self.x - main_state.boy.x + 800, self.y - main_state.boy.y + 300)
+        self.image.draw(self.x - main_state.boy.x + 640, self.y - main_state.boy.y + 300)
+        self.font.draw(self.x - main_state.boy.x, self.y - main_state.boy.y, '(%5d, %5d)' % (self.x - main_state.boy.x + 640, self.y - main_state.boy.y + 300), (255, 255, 0))
         #draw_rectangle(*self.get_bb())
 
     def update(self):
