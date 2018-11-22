@@ -9,6 +9,9 @@ class FixedBackground:
         self.image = load_image('futsal_court.png')
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
+        self.bgm = load_music('football.mp3')
+        self.bgm.set_volume(64)
+        self.bgm.repeat_play()
         self.w = self.image.w
         self.h = self.image.h
 
