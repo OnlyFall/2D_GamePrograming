@@ -6,6 +6,7 @@ import os
 from pico2d import *
 import game_framework
 import game_world
+from collections import  OrderedDict
 
 import ranking_state
 import world_build_state
@@ -60,18 +61,39 @@ def handle_events():
         else:
             boy.handle_event(event)
 
+loadRank = []
+tmpRank = []
 
 def update():
     global twice_zombie
+    global loadRank
+    global tmpRank
     for game_object in game_world.all_objects():
         game_object.update()
 
+
+    #블로그에서 찾은 방법!
+    file_data = OrderedDict()
+
+
     for zombie_count in twice_zombie:
         if collide(boy, zombie_count):
-            #loadRank = []
-            #with open('ranking.pickle', 'rb') as f:
-                #loadRank = pickle.load(f)
+            #tmpRank.clear()
+            with open('Rank.json', 'r', encoding="utf-8") as f:
+                loadRank = json.load(f)
+            k = loadRank["Rank"]
+            tmpRank = k
+
+            save_time = (get_time() - boy.start_time)
+            tmpRank.append(save_time)
+            file_data["Rank"] = tmpRank
+
+            #loadRank.append(save_time)
+
+            with open('Rank.json', 'w', encoding="utf-8") as f:
+                json.dump(file_data, f, ensure_ascii=False, indent="\t")
             game_framework.change_state(ranking_state)
+            break
 
 def draw():
     clear_canvas()
