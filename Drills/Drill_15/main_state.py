@@ -7,10 +7,12 @@ from pico2d import *
 import game_framework
 import game_world
 
+import ranking_state
 import world_build_state
-
+import pickle
 name = "MainState"
 
+ZombieData = None
 
 def collide(a, b):
     # fill here
@@ -25,11 +27,14 @@ def collide(a, b):
     return True
 
 boy = None
+twice_zombie = None
 
 def enter():
     # game world is prepared already in world_build_state
     global boy
+    global twice_zombie
     boy = world_build_state.get_boy()
+    twice_zombie = world_build_state.returnZombie
     pass
 
 def exit():
@@ -57,9 +62,16 @@ def handle_events():
 
 
 def update():
+    global twice_zombie
     for game_object in game_world.all_objects():
         game_object.update()
 
+    for zombie_count in twice_zombie:
+        if collide(boy, zombie_count):
+            #loadRank = []
+            #with open('ranking.pickle', 'rb') as f:
+                #loadRank = pickle.load(f)
+            game_framework.change_state(ranking_state)
 
 def draw():
     clear_canvas()
