@@ -14,7 +14,7 @@ from zombie import Zombie
 
 
 boy = None
-
+returnZombie = []
 
 name = "WorldBuildState"
 
@@ -40,7 +40,7 @@ def get_boy():
     return boy
 
 def create_new_world():
-    global boy
+    global boy, returnZombie
     boy = Boy()
     game_world.add_object(boy, 1)
 
@@ -50,7 +50,7 @@ def create_new_world():
     for data in zombie_data_list:
         zombie = Zombie(data['name'], data['x'], data['y'], data['size'])
         game_world.add_object(zombie, 1)
-
+        returnZombie.append(zombie)
 
 
 def load_saved_world():
@@ -59,8 +59,11 @@ def load_saved_world():
     game_world.load()
     for o in game_world.all_objects():
         if isinstance(o, Boy):
+            o.start_time = get_time()
             boy = o
-            break
+
+        if isinstance(o, Zombie):
+            returnZombie.append(o)
 
 
 def handle_events():
